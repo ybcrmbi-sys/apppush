@@ -118,6 +118,11 @@
     .field input[type="text"]:focus,
     .field textarea:focus { border-color: var(--primary); }
     .field textarea { resize: vertical; min-height: 88px; }
+    .ad-warning {
+      display: none; margin-top: 6px; color: #ff3b30;
+      font-size: 12px; font-weight: 600; line-height: 1.4;
+    }
+    .ad-warning.show { display: block; }
 
     /* 제목 textarea (title): 자동 높이, 리사이즈 없음 */
     #inp-title {
@@ -997,16 +1002,14 @@
         <label>제목 <span style="font-size:10px;font-weight:400;color:var(--text-sub)">(25자 줄바꿈)</span></label>
         <textarea id="inp-title" rows="1"
           oninput="enforce24(this); autoResizeTA(this); syncAndSave();"
-          placeholder="푸시 제목">혹시.. 바르셀로나 여행 계획하시나요? 👂</textarea>
+          placeholder="푸시 제목"></textarea>
       </div>
       <div class="field">
         <label>내용 <span style="font-size:10px;font-weight:400;color:var(--text-sub)">(25자 줄바꿈)</span></label>
         <textarea id="inp-body"
           oninput="enforce24(this); syncAndSave();"
-          placeholder="줄바꿈 그대로 반영됩니다">(광고) 유럽으로 가는 가장 스마트한 방법
-유류할증료가 부담된다면, 카타르항공✈️
-해외항공 할인쿠폰은 덤😎
-언제 또 나올지 몰라요⏰...</textarea>
+          placeholder="줄바꿈 그대로 반영됩니다"></textarea>
+        <div id="ad-warning" class="ad-warning">광고성 메시지의 경우 '(광고)' 표기가 필수 입니다.</div>
       </div>
     </div>
 
@@ -1053,10 +1056,6 @@
       <div class="field">
         <label>배터리 잔량 숫자</label>
         <input type="text" id="inp-aos3-battery" value="70" oninput="syncAndSave()" placeholder="예: 70">
-      </div>
-      <div class="field">
-        <label>알림바 그룹명</label>
-        <input type="text" id="inp-aos3-brand" value="노랑풍선" oninput="syncAndSave()" placeholder="노랑풍선">
       </div>
     </div>
 
@@ -1242,13 +1241,10 @@
               <div class="ios-icon" id="ios-icon">🎈</div>
               <div class="ios-text">
                 <div class="ios-top-row">
-                  <div class="ios-title" id="d-ios-title">혹시.. 바르셀로나 여행 계획하시나요? 👂</div>
+                  <div class="ios-title" id="d-ios-title"></div>
                   <span class="ios-time" id="d-ios-time">지금</span>
                 </div>
-                <div class="ios-body-text" id="d-ios-body">(광고) 유럽으로 가는 가장 스마트한 방법
-유류할증료가 부담된다면, 카타르항공✈️
-해외항공 할인쿠폰은 덤😎
-언제 또 나올지 몰라요⏰...</div>
+                <div class="ios-body-text" id="d-ios-body"></div>
               </div>
             </div>
           </div>
@@ -1272,11 +1268,8 @@
                   <span class="aos-notif-time" id="d-aos-time">오전 11:04</span>
                   <span class="aos-chevron" id="d-aos-chevron"></span>
                 </div>
-                <div class="aos-notif-title" id="d-aos-title">혹시.. 바르셀로나 여행 계획하시나요? 👂</div>
-                <div class="aos-notif-body" id="d-aos-body">(광고) 유럽으로 가는 가장 스마트한 방법
-유류할증료가 부담된다면, 카타르항공✈️
-해외항공 할인쿠폰은 덤😎
-언제 또 나올지 몰라요⏰...</div>
+                <div class="aos-notif-title" id="d-aos-title"></div>
+                <div class="aos-notif-body" id="d-aos-body"></div>
               </div>
             </div>
           </div>
@@ -1322,9 +1315,8 @@
                   <span class="aos-notif-time" id="d-aos3-time">오전 11:04</span>
                   <span class="aos-chevron" id="d-aos3-chevron"></span>
                 </div>
-                <div class="aos-notif-title" id="d-aos3-title">혹시.. 바르셀로나 여행 계획하시나요? 👂</div>
-                <div class="aos-notif-body" id="d-aos3-body">(광고) 유럽으로 가는 가장 스마트한 방법
-유류할증료가 부과된다면, 캐나다항공권 해외전용 할인쿠폰은 언제 사라질지 몰라요...</div>
+                <div class="aos-notif-title" id="d-aos3-title"></div>
+                <div class="aos-notif-body" id="d-aos3-body"></div>
               </div>
             </div>
           </div>
@@ -1540,14 +1532,14 @@
     if ($('d-aos3-battery-fill')) $('d-aos3-battery-fill').style.width = batteryPct + '%';
     $('d-aos3-clock').textContent = aosClockText(aosTime);
     $('d-aos3-date').textContent = aosDateText();
-    /* 알림바 그룹명 제거됨 */
   }
-  function toggleAos3Fold() { /* 알림바 그룹명 제거됨 */ }
+  function toggleAos3Fold() {}
   function sync() {
     const title   = $('inp-title').value;   // 이미 enforce24 적용된 값
     const body    = $('inp-body').value;
     const iosTime = $('inp-ios-time').value;
     const aosTime = $('inp-aos-time').value;
+    validateAdLabel(title, body);
     $('d-ios-title').textContent = title;
     $('d-ios-body').textContent  = body;
     $('d-ios-time').textContent  = iosTime;
@@ -1560,6 +1552,12 @@
     syncAos3Header(aosTime);
   }
   function syncAndSave() { sync(); saveSettings(); }
+
+  function validateAdLabel(title, body) {
+    const warning = $('ad-warning');
+    if (!warning) return;
+    warning.classList.toggle('show', !(title.includes('(광고)') || body.includes('(광고)')));
+  }
 
   /* ─── Time templates ─── */
   function nowKorean() {
@@ -1974,7 +1972,6 @@
       aosTime:       $('inp-aos-time').value,
       aos3Carrier:   $('inp-aos3-carrier').value,
       aos3Battery:   $('inp-aos3-battery').value,
-      aos3Brand:     $('inp-aos3-brand').value,
       iosBg:         $('ios-bg-canvas').style.background,
       iosBgActiveId: ($('ios-bg-gallery').querySelector('.bg-thumb.active') || {}).dataset?.id || '',
       aosBg:         $('aos-bg-canvas').style.background,
@@ -2014,8 +2011,6 @@
       if (d.aosTime) $('inp-aos-time').value = d.aosTime;
       if (d.aos3Carrier !== undefined) $('inp-aos3-carrier').value = d.aos3Carrier;
       if (d.aos3Battery !== undefined) $('inp-aos3-battery').value = d.aos3Battery;
-      if (d.aos3Brand !== undefined) $('inp-aos3-brand').value = d.aos3Brand;
-
       if (d.customBg) {
         customBgUrl = d.customBg;
         ['ios','aos'].forEach(p => { const b=$(`${p}-apply-upload`); if(b) b.disabled=false; });
@@ -2095,7 +2090,6 @@
       aosTime:       $('inp-aos-time').value,
       aos3Carrier:   $('inp-aos3-carrier').value,
       aos3Battery:   $('inp-aos3-battery').value,
-      aos3Brand:     $('inp-aos3-brand').value,
       // 색상 모드일 때만 CSS 저장, 이미지 모드는 customBg로 복원
       iosBg:         iosBgMode === 'color' ? $('ios-bg-canvas').style.background : null,
       iosBgActiveId: ($('ios-bg-gallery').querySelector('.bg-thumb.active') || {}).dataset?.id || '',
@@ -2199,8 +2193,6 @@
     if (d.aosTime !== undefined) $('inp-aos-time').value = d.aosTime;
     if (d.aos3Carrier !== undefined) $('inp-aos3-carrier').value = d.aos3Carrier;
     if (d.aos3Battery !== undefined) $('inp-aos3-battery').value = d.aos3Battery;
-    if (d.aos3Brand !== undefined) $('inp-aos3-brand').value = d.aos3Brand;
-
     // ── 배경 이미지 data URL 복원 ──
     if (d.customBg) {
       customBgUrl = d.customBg;
