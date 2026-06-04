@@ -988,10 +988,6 @@
           </div>
         </div>
       </div>
-      <div class="field">
-        <label>앱 이름 <span style="font-size:10px;font-weight:400;color:var(--text-sub)">(Android용)</span></label>
-        <input type="text" id="inp-appname" value="노랑풍선" oninput="syncAndSave()" placeholder="앱 이름">
-      </div>
     </div>
 
     <div class="ctrl-divider"></div>
@@ -1009,7 +1005,7 @@
         <textarea id="inp-body"
           oninput="enforce24(this); syncAndSave();"
           placeholder="줄바꿈 그대로 반영됩니다"></textarea>
-        <div id="ad-warning" class="ad-warning">광고성 메시지의 경우 '(광고)' 표기가 필수 입니다.</div>
+        <div id="ad-warning" class="ad-warning show">광고성 메시지의 경우 '(광고)' 표기가 필수 입니다.</div>
       </div>
     </div>
 
@@ -1965,7 +1961,6 @@
   /* ─── localStorage ─── */
   function saveSettings() {
     const data = {
-      appname:       $('inp-appname').value,
       title:         $('inp-title').value,
       body:          $('inp-body').value,
       iosTime:       $('inp-ios-time').value,
@@ -2004,7 +1999,6 @@
     try {
       const d = JSON.parse(raw);
       if (d.logo)    { logoUrl = d.logo; setLogoUI(logoUrl); }
-      if (d.appname) $('inp-appname').value = d.appname;
       if (d.title)   { $('inp-title').value = d.title; enforce24($('inp-title')); autoResizeTA($('inp-title')); }
       if (d.body)    { $('inp-body').value  = d.body;  enforce24($('inp-body')); }
       if (d.iosTime) $('inp-ios-time').value = d.iosTime;
@@ -2072,7 +2066,7 @@
     if (tryT(arr)) return 'full';
     if (tryT(arr.map(t => t ? {...t, logo:null} : null)))          return 'no-logo';
     if (tryT(arr.map(t => t ? {...t, logo:null, customBg:null} : null))) return 'no-img';
-    tryT(arr.map(t => t ? {name:t.name,title:t.title,body:t.body,appname:t.appname} : null));
+    tryT(arr.map(t => t ? {name:t.name,title:t.title,body:t.body} : null));
     return 'text-only';
   }
 
@@ -2083,7 +2077,6 @@
   function snapshotState(name) {
     return {
       name,
-      appname:       $('inp-appname').value,
       title:         $('inp-title').value,
       body:          $('inp-body').value,
       iosTime:       $('inp-ios-time').value,
@@ -2186,7 +2179,6 @@
     if (d.logo) { logoUrl = d.logo; setLogoUI(logoUrl); }
 
     // ── 텍스트 내용 ──
-    if (d.appname !== undefined) $('inp-appname').value  = d.appname;
     if (d.title   !== undefined) { $('inp-title').value  = d.title; enforce24($('inp-title')); autoResizeTA($('inp-title')); }
     if (d.body    !== undefined) { $('inp-body').value   = d.body;  enforce24($('inp-body')); }
     if (d.iosTime !== undefined) $('inp-ios-time').value = d.iosTime;
