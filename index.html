@@ -119,7 +119,6 @@
     .field textarea:focus { border-color: var(--primary); }
     .field textarea { resize: vertical; min-height: 88px; }
     .ad-warning {
-      display: block !important;
       visibility: visible !important;
       opacity: 1 !important;
       margin-top: 6px;
@@ -1542,6 +1541,7 @@
     const body    = $('inp-body').value;
     const iosTime = $('inp-ios-time').value;
     const aosTime = $('inp-aos-time').value;
+    updateAdWarning(title, body);
     $('d-ios-title').textContent = title;
     $('d-ios-body').textContent  = body;
     $('d-ios-time').textContent  = iosTime;
@@ -1554,6 +1554,13 @@
     syncAos3Header(aosTime);
   }
   function syncAndSave() { sync(); saveSettings(); }
+
+  function updateAdWarning(title, body) {
+    const warning = $('ad-warning');
+    if (!warning) return;
+    const hasAdLabel = title.includes('(광고)') || body.includes('(광고)');
+    warning.style.setProperty('display', hasAdLabel ? 'none' : 'block', 'important');
+  }
 
   /* ─── Time templates ─── */
   function nowKorean() {
