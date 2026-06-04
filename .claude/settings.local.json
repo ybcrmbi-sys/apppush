@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(dir \"D:\\\\업무폴더\\\\z.프로그램\\\\앱푸시 시안\")",
+      "Bash(python -c ' *)"
+    ]
+  }
+}
