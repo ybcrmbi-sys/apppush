@@ -119,8 +119,14 @@
     .field textarea:focus { border-color: var(--primary); }
     .field textarea { resize: vertical; min-height: 88px; }
     .ad-warning {
-      display: block; margin-top: 6px; color: #ff3b30;
-      font-size: 12px; font-weight: 600; line-height: 1.4;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      margin-top: 6px;
+      color: #ff3b30 !important;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.4;
     }
 
     /* 제목 textarea (title): 자동 높이, 리사이즈 없음 */
@@ -1004,7 +1010,9 @@
         <textarea id="inp-body"
           oninput="enforce24(this); syncAndSave();"
           placeholder="줄바꿈 그대로 반영됩니다"></textarea>
-        <div id="ad-warning" class="ad-warning">광고성 메시지 발송의 경우 '(광고)' 가 필수로 입력되어야 합니다.</div>
+        <p id="ad-warning" class="ad-warning" aria-live="polite" style="display:block !important;visibility:visible !important;opacity:1 !important;margin-top:6px;color:#ff3b30 !important;font-size:12px;font-weight:600;line-height:1.4;">
+          광고성 메시지 발송의 경우 '(광고)' 가 필수로 입력되어야 합니다.
+        </p>
       </div>
     </div>
 
